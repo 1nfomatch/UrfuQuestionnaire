@@ -27,22 +27,31 @@ export default function App() {
 
   React.useEffect(fetchData, []);
 
-  {/* <FlatList
-    data={items}
-    renderItem={({ item }) => <Text style={[GlobalStyles.text]}>{item.topic}</Text>}
-  /> */}
+  const getRandomItem = (array) => {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    const selectedRandomItem = array[randomIndex];
+    return selectedRandomItem;
+  };
 
   const addMessage = (text, sender) => {
+    var gradient = getRandomItem(gradients);
     const newMessage = {
       text: text,
       sender: sender,
-      id: messages.length.toString(),
+      gradient: gradient
     };
     setMessages([newMessage, ...messages]);
   };
 
+  const sendQuestion = () => {
+    if (questionText.length === 0) {
+      return;
+    }
+    addMessage(questionText, "user");
+    setQuestionText("");
+  };
+
   if (messages.length === 0) {
-    console.log("add message");
     addMessage("Я бот Вопросник УрФУ помогу найти ответ на твой вопрос", "robot");
   }
 
@@ -53,7 +62,8 @@ export default function App() {
       <View style={styles.body}>
         <Chat messages={messages} />
       </View>
-      <QuestionInput lineCount={5} lineHeight={22} questionText={questionText} onChangeText={setQuestionText}/>
+      <QuestionInput lineCount={2} lineHeight={39} questionText={questionText}
+        onChangeText={setQuestionText} sendQuestion={sendQuestion} />
     </ImageBackground>);
 }
 
@@ -65,7 +75,14 @@ const styles = StyleSheet.create({
   },
   body: {
     flexGrow: 1,
-    borderWidth: 3,
-    borderColor: 'red'
+    // borderWidth: 3,
+    // borderColor: 'red'
   }
 });
+
+const gradients = [
+  ['#B76CD2', '#7E319A'],
+  ['#6578DF', '#4C5AA5'],
+  ['#FFDB1B', '#EEAF0E'],
+  ['#F0B167', '#E34D30']
+];

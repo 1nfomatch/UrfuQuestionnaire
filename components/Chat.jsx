@@ -1,60 +1,70 @@
-import React, { useRef, useState } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
 import { FlatList, Image, View, Text, StyleSheet } from 'react-native';
 
 export const Chat = ({ messages }) => {
-    console.log(messages);
+    // console.log(messages);
+
+    const renderMessage = ({ item }) => {
+        const isRobot = item.sender === "robot";
+        const position = isRobot ? 'flex-start' : 'flex-end';
+        return (
+            <View style={[styles.messageContainer, { justifyContent: position }]}>
+                {isRobot && <Image source={require("../assets/images/RobotIcon.png")} style={styles.messageIcon} />}
+                <View style={styles.messageTextContainer}>
+                    <LinearGradient
+                        style={styles.messageTextGradient}
+                        colors={item.gradient}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}>
+                        <Text style={styles.messageText}>
+                            {item.text}
+                        </Text>
+                    </LinearGradient>
+                </View>
+                {!isRobot && <Image source={require("../assets/images/UserIcon.png")} style={styles.messageIcon} />}
+            </View>
+        )
+    };
 
     return (
-        <View style={styles.chatContainer}>
-            {messages.map((message, index) => {
-                const isRobot = message.sender === "robot";
-                const messageContainerStyle = isRobot ? styles.robotMessageContainer : styles.userMessageContainer;
-                const messageTextStyle = isRobot ? styles.robotMessageText : styles.userMessageText;
-                return (
-                    <View key={index} style={messageContainerStyle}>
-                        {isRobot && <Image source={require("../assets/images/RobotIcon.png")} style={styles.icon} />}
-                        <Text style={messageTextStyle}>
-                            {message.text}
-                        </Text>
-                        {!isRobot && <Image source={require("../assets/images/UserIcon.png")} style={styles.icon} />}
-                    </View>
-                );
-            })}
-        </View>
+        <FlatList
+            data={messages}
+            renderItem={renderMessage}
+            style={styles.chatContainer}
+            inverted={true}
+            scrollEnabled={true}
+        />
     );
 };
 
 const styles = StyleSheet.create({
     chatContainer: {
         flex: 1,
-        paddingHorizontal: 20,
+        flexDirection: 'column'
     },
-    robotMessageContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
+    messageContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 5
     },
-    userMessageContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        marginBottom: 10,
+    messageTextContainer: {
+        flexGrow: 1,
+        minHeight: '10%',
+        maxWidth: '75%',
+        borderRadius: 15,
+        marginHorizontal: 10
     },
-    robotMessageText: {
-        backgroundColor: "#d3d3d3",
-        padding: 10,
-        borderRadius: 10,
-        marginLeft: 10,
+    messageTextGradient: {
+        borderRadius: 15,
     },
-    userMessageText: {
-        backgroundColor: "#add8e6",
-        padding: 10,
-        borderRadius: 10,
-        marginRight: 10,
+    messageText: {
+        color: 'white',
+        padding: 10
     },
-    icon: {
-        width: 30,
-        height: 30,
-        marginHorizontal: 5,
-    },
+    messageIcon: {
+        width: 70,
+        height: 70,
+    }
 });

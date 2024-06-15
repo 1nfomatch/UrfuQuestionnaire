@@ -3,7 +3,7 @@ import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity } from 'reac
 import { LinearGradient } from "expo-linear-gradient";
 import { GlobalStyles } from "../styles/global-styles";
 
-export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeText }) => {
+export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeText, sendQuestion }) => {
     const [height, setHeight] = React.useState(0);
     const refInput = React.useRef(null);
     const [isAskButtonClicked, setIsAskButtonClicked] = React.useState(false);
@@ -21,6 +21,10 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
         refInput.current.focus();
     }
 
+    if (questionText.length === 0 && height !== lineHeight) {
+        setHeight(lineHeight);
+    }
+
     return (
         !isAskButtonClicked && questionText.length === 0 ? (
             <View style={styles.footer}>
@@ -34,8 +38,7 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
                     end={{ x: 1, y: 0.5 }}>
                     <TouchableOpacity
                         onPress={() => setIsAskButtonClicked(true)}
-                        style={styles.ask_button_touchable}
-                    >
+                        style={styles.ask_button_touchable}>
                         <Image style={styles.ask_button_icon} source={require("../assets/images/QuestionIcon.png")} />
                         <Text style={[{ paddingLeft: 5 }, GlobalStyles.text]}>СПРОСИТЬ</Text>
                     </TouchableOpacity>
@@ -52,7 +55,9 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
                     style={[styles.questionInput, { height: Math.min(lineCount * lineHeight, height) }]}
                     ref={refInput}
                 />
-                <Image style={styles.questionIcon} source={require("../assets/images/QuestionIcon.png")} />
+                <TouchableOpacity onPress={sendQuestion}>
+                    <Image style={styles.questionIcon} source={require("../assets/images/QuestionIcon.png")} />
+                </TouchableOpacity>
             </View>
         )
     );
@@ -63,7 +68,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'white',
         alignItems: 'center',
-        borderWidth: 3
+        marginTop: 5
+        // borderWidth: 3
     },
     questionInput: {
         textAlignVertical: 'top',
@@ -77,7 +83,7 @@ const styles = StyleSheet.create({
     footer: {
         alignItems: 'center',
         paddingBottom: '10%',
-        borderWidth: 3
+        // borderWidth: 3
     },
     footer_hint_text: {
         fontSize: 16

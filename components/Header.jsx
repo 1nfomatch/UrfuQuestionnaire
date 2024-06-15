@@ -20,8 +20,8 @@ export const Header = () => {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
-        borderWidth: 3,
-        borderColor: 'green'
+        // borderWidth: 3,
+        // borderColor: 'green'
     },
     header_icon_container: {
         textAlign: 'right',
