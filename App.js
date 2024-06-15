@@ -5,12 +5,14 @@ import { Header } from "./components/Header";
 import { GlobalStyles } from "./styles/global-styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { QuestionInput } from "./components/QuestionInput"
+import { Chat } from "./components/Chat"
 
 export default function App() {
   const [items, setItems] = React.useState();
   const [isChat, setIsChat] = React.useState(true);
   const [isWriting, setIsWriting] = React.useState(false);
   const [questionText, setQuestionText] = React.useState("");
+  const [messages, setMessages] = React.useState([]); // Состояние для сообщений чата
 
   const fetchData = () => {
     axios
@@ -30,16 +32,26 @@ export default function App() {
     renderItem={({ item }) => <Text style={[GlobalStyles.text]}>{item.topic}</Text>}
   /> */}
 
+  const addMessage = (text, sender) => {
+    const newMessage = {
+      text: text,
+      sender: sender,
+      id: messages.length.toString(),
+    };
+    setMessages([newMessage, ...messages]);
+  };
+
+  if (messages.length === 0) {
+    console.log("add message");
+    addMessage("Я бот Вопросник УрФУ помогу найти ответ на твой вопрос", "robot");
+  }
+
   return (
     <ImageBackground style={styles.page} source={require("./assets/images/Background.png")} resizeMode="cover">
       <StatusBar theme="auto" />
       <Header />
       <View style={styles.body}>
-        {/* <View style={{flexDirection: 'column', width: '100%', height: 100}}>
-          <View style={{backgroundColor: 'blue', height: 10}}></View>
-          <View style={{backgroundColor: 'white', flexGrow: 1}}></View>
-          <View style={{backgroundColor: 'green', height: 5}}></View>
-        </View> */}
+        <Chat messages={messages} />
       </View>
       <QuestionInput lineCount={5} lineHeight={22} questionText={questionText} onChangeText={setQuestionText}/>
     </ImageBackground>);
