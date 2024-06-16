@@ -1,13 +1,15 @@
 import React from "react"
 import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
-import { GlobalStyles } from "../styles/global-styles";
+import { GlobalStyles } from "../styles/GlobalStyles";
+import { Images } from "../tools/Images";
+import { Constants } from "../tools/Constants";
 
-export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeText, sendQuestion }) => {
+export const QuestionInput = ({ lineCount, lineHeight, questionText,
+    onChangeText, sendQuestion, isAnswering }) => {
     const [height, setHeight] = React.useState(0);
     const refInput = React.useRef(null);
     const [isAskButtonClicked, setIsAskButtonClicked] = React.useState(false);
-    const [isFirstTimeFocused, setIsFirstTimeFocused] = React.useState(false);
 
     // Обработка увеличения высоты TextInput
     const handleContentSizeChange = (event) => {
@@ -15,9 +17,16 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
         setHeight(contentSize.height);
     };
 
+    const handleSendQuestion = () => {
+        if (refInput.current) {
+            refInput.current.blur();
+        }
+        sendQuestion();
+    }
+
     // Открытие ввода вопроса при нажатии на кнопку спросить
-    if (!isFirstTimeFocused && isAskButtonClicked && refInput.current) {
-        setIsFirstTimeFocused(true);
+    if (!Constants.isChatStarted && isAskButtonClicked && refInput.current) {
+        Constants.isChatStarted = true;
         refInput.current.focus();
     }
 
@@ -26,14 +35,14 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
     }
 
     return (
-        !isAskButtonClicked && questionText.length === 0 ? (
+        !Constants.isChatStarted && !isAskButtonClicked && questionText.length === 0 ? (
             <View style={styles.footer}>
                 <Text style={styles.footer_hint_text}>Чтобы задать мне вопрос,</Text>
                 <Text style={styles.footer_hint_text}>нажми на кнопку “спросить”</Text>
-                <Image source={require('../assets/images/PointerIcon.png')} />
+                <Image source={Images.chat.pointerIcon} />
                 <LinearGradient
                     style={styles.ask_button}
-                    colors={['#F07688', '#FBD8A9']}
+                    colors={['#EE6282', '#FBD8A9']}
                     start={{ x: 0, y: 0.5 }}
                     end={{ x: 1, y: 0.5 }}>
                     <TouchableOpacity
@@ -55,8 +64,10 @@ export const QuestionInput = ({ lineCount, lineHeight, questionText, onChangeTex
                     style={[styles.questionInput, { height: Math.min(lineCount * lineHeight, height) }]}
                     ref={refInput}
                 />
-                <TouchableOpacity onPress={sendQuestion}>
-                    <Image style={styles.questionIcon} source={require("../assets/images/QuestionIcon.png")} />
+                <TouchableOpacity onPress={handleSendQuestion} disabled={isAnswering}>
+                    <Image
+                        style={[isAnswering ? styles.disabledQuestionIcon : styles.questionIcon]}
+                        source={require("../assets/images/QuestionIcon.png")} />
                 </TouchableOpacity>
             </View>
         )
@@ -67,14 +78,17 @@ const styles = StyleSheet.create({
     questionInputContainer: {
         flexDirection: 'row',
         backgroundColor: 'white',
-        alignItems: 'center',
-        marginTop: 5
-        // borderWidth: 3
+        alignItems: 'center'
     },
     questionInput: {
         textAlignVertical: 'top',
         padding: 10,
         flex: 1
+    },
+    disabledQuestionIcon: {
+        tintColor: 'black',
+        margin: 5,
+        opacity: 0.3
     },
     questionIcon: {
         tintColor: 'black',
@@ -82,8 +96,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         alignItems: 'center',
-        paddingBottom: '10%',
-        // borderWidth: 3
+        paddingBottom: '10%'
     },
     footer_hint_text: {
         fontSize: 16
@@ -103,8 +116,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     ask_button_icon: {
-        marginLeft: 10,
-        maxHeight: '100%',
-        maxWidth: '100%'
+        marginLeft: 10
     }
 });

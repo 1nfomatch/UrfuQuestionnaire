@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "UrfuQuestionnaire",
+    "name": "Вопросник УрФУ",
     "slug": "UrfuQuestionnaire",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/UrfuLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/UrfuLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,12 +16,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/UrfuLogo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.fakeaccount11111.UrfuQuestionnaire"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6a1d274c-5de2-44e5-bcc2-2036c2817c1f"
+      }
     }
   }
 }

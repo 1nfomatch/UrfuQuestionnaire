@@ -1,17 +1,21 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Text, Image, View, StyleSheet } from 'react-native';
-import { GlobalStyles } from '../styles/global-styles';
+import { Text, Image, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { GlobalStyles } from '../styles/GlobalStyles';
+import { Images } from "../tools/Images";
 
-export const Header = () => {
+export const Header = ({ isChat, changeSideMenuState }) => {
     return (
         <LinearGradient style={styles.header} colors={['#e40b76', '#f7b008']} start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}>
-            <View style={styles.header_main_container}>
-                <Image source={require("../assets/images/Menu.png")} />
-                <Text style={[GlobalStyles.text, styles.header_title]}>Бот Вопросник УрФУ</Text>
+            <View style={styles.headerMainContainer}>
+                <TouchableOpacity onPress={changeSideMenuState}>
+                    {isChat && <Image source={Images.main.openMenuIcon} />}
+                    {!isChat && <Image source={Images.main.closeMenuIcon} />}
+                </TouchableOpacity>
+                <Text style={[GlobalStyles.text, styles.headerTitle]}>Бот Вопросник УрФУ</Text>
             </View>
-            <View style={styles.header_icon_container}>
-                <Image style={styles.header_icon} source={require("../assets/images/UrfuLogo.png")} />
+            <View style={styles.headerIconContainer}>
+                <Image style={styles.headerIcon} source={Images.main.urfuLogo} />
             </View>
         </LinearGradient>
     );
@@ -19,25 +23,24 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
     header: {
-        flexDirection: 'row',
-        // borderWidth: 3,
-        // borderColor: 'green'
+        flexDirection: 'row'
     },
-    header_icon_container: {
+    headerIconContainer: {
         textAlign: 'right',
         padding: 5
     },
-    header_main_container: {
+    headerMainContainer: {
         flex: 1,
-        padding: 15,
         marginTop: 5,
+        marginHorizontal: 15,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderTopWidth: 3,
+        borderTopWidth: 2.5,
         borderTopColor: 'white'
     },
-    header_title: {
-        fontSize: 22
+    headerTitle: {
+        fontSize: 22,
+        paddingHorizontal: 15
     }
 });

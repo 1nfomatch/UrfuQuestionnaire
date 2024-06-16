@@ -1,16 +1,15 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { FlatList, Image, View, Text, StyleSheet } from 'react-native';
+import { Images } from "../tools/Images";
 
 export const Chat = ({ messages }) => {
-    // console.log(messages);
-
     const renderMessage = ({ item }) => {
         const isRobot = item.sender === "robot";
         const position = isRobot ? 'flex-start' : 'flex-end';
         return (
             <View style={[styles.messageContainer, { justifyContent: position }]}>
-                {isRobot && <Image source={require("../assets/images/RobotIcon.png")} style={styles.messageIcon} />}
+                {isRobot && <Image source={Images.chat.robotIcon} style={styles.messageIcon} />}
                 <View style={styles.messageTextContainer}>
                     <LinearGradient
                         style={styles.messageTextGradient}
@@ -22,7 +21,7 @@ export const Chat = ({ messages }) => {
                         </Text>
                     </LinearGradient>
                 </View>
-                {!isRobot && <Image source={require("../assets/images/UserIcon.png")} style={styles.messageIcon} />}
+                {!isRobot && <Image source={Images.chat.userIcon} style={styles.messageIcon} />}
             </View>
         )
     };
